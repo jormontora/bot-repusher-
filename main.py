@@ -13,7 +13,14 @@ import yt_dlp
 API_TOKEN = '7654313992:AAF-IlnkA50SEBC_ajaicQu-Id8_WbYZMqM'  # <-- Replace with your bot token
 
 # Налаштування логування
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    handlers=[
+        logging.FileHandler("bot.log", encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 
 # Ініціалізація бота та диспетчера (aiogram v3)
@@ -145,7 +152,7 @@ async def admin_stats(message: types.Message):
         f"Статистика:\n"
         f"Обработано видео: {stats.get('processed_videos', 0)}\n"
         f"Размер кеша: {cache_size // (1024*1024)} МБ\n"
-        f"Уникальних користувачів: {len(get_users())}\n"
+        f"Унікальних користувачів: {len(get_users())}\n"
         f"Групп: {len(get_groups())}"
     )
 
@@ -238,7 +245,7 @@ async def admin_help(message: types.Message):
         "/set_max_video SIZE_MB — Лимит видео\n"
         "/ban_user USER_ID — БАН\n"
         "/unban_user USER_ID — разбан\n"
-        "/logs N — N рядков логов\n"
+        "/logs N — N рядков логів\n"
         "/shutdown — выключить бота\n"
         "/broadcast TEXT — розсылка"
     )
@@ -299,7 +306,7 @@ def clear_cache_on_start():
                 os.remove(file_path)
                 logger.info(f"Кеш-файл {file_path} удалено при старте бота.")
         except Exception as e:
-            logger.warning(f"Не удалось удалить кеш-файл {file_path}: {e}")
+            logger.warning(f"Не вдалося видалити кеш-файл {file_path}: {e}")
 
 def get_cache_size():
     total = 0
@@ -363,7 +370,7 @@ async def handle_video_link(message: types.Message):
         try:
             if os.path.exists(path):
                 os.remove(path)
-                logger.info(f"Файл {path} удален автоматично через 10 минут.")
+                logger.info(f"Файл {path} удален автоматично через 10 хвилин.")
         except Exception as e:
             logger.warning(f"Ошибка при атвоудалении файла: {e}")
 
@@ -381,7 +388,7 @@ async def handle_video_link(message: types.Message):
             try:
                 await bot.delete_message(message.chat.id, message.message_id)
             except Exception as e:
-                logger.warning(f"Не удалось удалить сообщение: {e}")
+                logger.warning(f"Не вдалося видалити повідомлення: {e}")
         return
 
     progress = {'percent': 0}
@@ -440,7 +447,7 @@ async def handle_video_link(message: types.Message):
             try:
                 await bot.delete_message(message.chat.id, message.message_id)
             except Exception as e:
-                logger.warning(f"Не удалось удалить сообщение: {e}")
+                logger.warning(f"Не вдалося видалити повідомлення: {e}")
     except Exception as e:
         logger.error(f"Ошибка при скачивании: {e}")
         await bot.edit_message_text(
