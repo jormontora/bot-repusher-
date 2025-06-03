@@ -12,14 +12,24 @@ import yt_dlp
 
 API_TOKEN = '7654313992:AAF-IlnkA50SEBC_ajaicQu-Id8_WbYZMqM'  # <-- Replace with your bot token
 
-# Налаштування логування
+# Кастомный фильтр для логов (игнорировать "Update id=... is not handled...")
+class UsefulLogFilter(logging.Filter):
+    def filter(self, record):
+        msg = record.getMessage()
+        return not (
+            "Update id=" in msg and "is not handled" in msg
+        )
+
+# Настройка логирования
+file_handler = logging.FileHandler("bot.log", encoding="utf-8")
+file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+file_handler.addFilter(UsefulLogFilter())
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+console_handler.addFilter(UsefulLogFilter())
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(message)s",
-    handlers=[
-        logging.FileHandler("bot.log", encoding="utf-8"),
-        logging.StreamHandler()
-    ]
+    handlers=[file_handler, console_handler]
 )
 logger = logging.getLogger(__name__)
 
@@ -40,8 +50,8 @@ GROUPS_FILE = "groups.json"
 BANNED_FILE = "banned.json"
 STATS_FILE = "stats.json"
 
-# Регулярні вирази для TikTok, Instagram Reels, YouTube Shorts, Facebook Reels (включаючи короткі посилання, параметри і нові типи)
-TIKTOK_PATTERN = r'(https?://(?:www\.)?(?:tiktok\.com/[^\s]+|vm\.tiktok\.com/[^\s]+))'
+# Регулярні вирази для TikTok (включаючи vt.tiktok.com), Instagram Reels, YouTube Shorts, Facebook Reels
+TIKTOK_PATTERN = r'(https?://(?:www\.)?(?:tiktok\.com/[^\s]+|vm\.tiktok\.com/[^\s]+|vt\.tiktok\.com/[^\s]+))'
 INSTA_REELS_PATTERN = r'(https?://(?:www\.)?instagram\.com/(?:reel|reels|p)/[^\s]+)'
 YTSHORTS_PATTERN = r'(https?://(?:www\.)?(?:youtube\.com/shorts/[^\s]+|youtu\.be/[^\s]+))'
 FB_REELS_PATTERN = (
