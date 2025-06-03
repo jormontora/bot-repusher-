@@ -65,6 +65,9 @@ async def update_progress_message(bot, chat_id, message_id, percent):
 
 # Основний хендлер для обробки посилань на відео
 async def handle_video_link(message: types.Message):
+    # Додаємо логування типу чату
+    logger.info(f"Тип чату: {message.chat.type}, id чату: {message.chat.id}")
+
     # Перевірка розміру кешу перед обробкою нового відео
     cache_size = get_cache_size()
     if cache_size > 2 * 1024 * 1024 * 1024:  # 2 ГБ
