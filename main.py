@@ -55,7 +55,7 @@ TIKTOK_PATTERN = r'(https?://(?:www\.)?(?:tiktok\.com/[^\s]+|vm\.tiktok\.com/\S+
 INSTA_REELS_PATTERN = r'(https?://(?:www\.)?instagram\.com/(?:reel|reels|p)/[^\s]+)'
 YTSHORTS_PATTERN = r'(https?://(?:www\.)?(?:youtube\.com/shorts/[^\s]+|youtu\.be/[^\s]+))'
 FB_REELS_PATTERN = (
-    r'(https?://(?:www\.)?(?:facebook\.com/(?:reel|reels|share/v)/[^\s]+|fb\.watch/[^\s]+))'
+    r'(https?://(?:www\.)?(?:facebook\.com/(?:reel|reels|share/v|share/r)/[^\s]+|fb\.watch/[^\s]+))'
 )
 
 # --- Адмінські змінні та структури ---
