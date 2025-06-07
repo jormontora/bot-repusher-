@@ -12,7 +12,7 @@ import yt_dlp
 
 API_TOKEN = '7654313992:AAF-IlnkA50SEBC_ajaicQu-Id8_WbYZMqM'  # <-- Replace with your bot token
 
-# Кастомный фильтр для логов (игнорировать "Update id=... is not handled...")
+# Кастомний фільтр для логів (ігнорувати "Update id=... is not handled...")
 class UsefulLogFilter(logging.Filter):
     def filter(self, record):
         msg = record.getMessage()
@@ -20,7 +20,7 @@ class UsefulLogFilter(logging.Filter):
             "Update id=" in msg and "is not handled" in msg
         )
 
-# Настройка логирования
+# Налаштування логування
 file_handler = logging.FileHandler("bot.log", encoding="utf-8")
 file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
 file_handler.addFilter(UsefulLogFilter())
@@ -51,7 +51,7 @@ BANNED_FILE = "banned.json"
 STATS_FILE = "stats.json"
 
 # Регулярні вирази для TikTok (включаючи vt.tiktok.com), Instagram Reels, YouTube Shorts, Facebook Reels
-TIKTOK_PATTERN = r'(https?://(?:www\.)?(?:tiktok\.com/[^\s]+|vm\.tiktok\.com/[^\s]+|vt\.tiktok\.com/[^\s]+))'
+TIKTOK_PATTERN = r'(https?://(?:www\.)?(?:tiktok\.com/[^\s]+|vm\.tiktok\.com/\S+|vt\.tiktok\.com/\S+))'
 INSTA_REELS_PATTERN = r'(https?://(?:www\.)?instagram\.com/(?:reel|reels|p)/[^\s]+)'
 YTSHORTS_PATTERN = r'(https?://(?:www\.)?(?:youtube\.com/shorts/[^\s]+|youtu\.be/[^\s]+))'
 FB_REELS_PATTERN = (
@@ -184,7 +184,7 @@ async def admin_users(message: types.Message):
                 user_lines.append(f"{uid} - {name} {username}".strip())
             except Exception:
                 user_lines.append(f"{uid} - Пользователь")
-        await message.reply("Уникальные пользователи:\n" + "\n".join(user_lines))
+        await message.reply("Уникальні користувачі:\n" + "\n".join(user_lines))
     else:
         await message.reply("Пользователей пока нет.")
 
@@ -199,10 +199,10 @@ async def admin_groups(message: types.Message):
                 title = chat.title or ""
                 group_lines.append(f"{gid} - {title}")
             except Exception:
-                group_lines.append(f"{gid} - Группа")
-        await message.reply("Группы:\n" + "\n".join(group_lines))
+                group_lines.append(f"{gid} - Група")
+        await message.reply("Групи:\n" + "\n".join(group_lines))
     else:
-        await message.reply("Груп пока нет.")
+        await message.reply("Груп поки немає.")
 
 @admin_only
 async def admin_set_max_cache(message: types.Message):
@@ -211,9 +211,9 @@ async def admin_set_max_cache(message: types.Message):
         stats = get_stats()
         stats["max_cache_size"] = size_mb * 1024 * 1024
         set_stats(stats)
-        await message.reply(f"Новый лимит кеша: {size_mb} МБ")
+        await message.reply(f"Новий ліміт кешу: {size_mb} МБ")
     except Exception:
-        await message.reply("Использование: /set_max_cache SIZE_MB")
+        await message.reply("Використання: /set_max_cache SIZE_MB")
 
 @admin_only
 async def admin_set_max_video(message: types.Message):
@@ -222,42 +222,42 @@ async def admin_set_max_video(message: types.Message):
         stats = get_stats()
         stats["max_video_size"] = size_mb * 1024 * 1024
         set_stats(stats)
-        await message.reply(f"Новый лимит размера видео: {size_mb} МБ")
+        await message.reply(f"Новий ліміт розміру відео: {size_mb} МБ")
     except Exception:
-        await message.reply("Использование: /set_max_video SIZE_MB")
+        await message.reply("Використання: /set_max_video SIZE_MB")
 
 @admin_only
 async def admin_ban_user(message: types.Message):
     try:
         user_id = int(message.text.split()[1])
         ban_user(user_id)
-        await message.reply(f"Пользователь {user_id} заблокирован.")
+        await message.reply(f"Користувач {user_id} заблокований.")
     except Exception:
-        await message.reply("Использование: /ban_user USER_ID")
+        await message.reply("Використання: /ban_user USER_ID")
 
 @admin_only
 async def admin_unban_user(message: types.Message):
     try:
         user_id = int(message.text.split()[1])
         unban_user(user_id)
-        await message.reply(f"Пользователь {user_id} разблокирован.")
+        await message.reply(f"Користувач {user_id} розблокований.")
     except Exception:
-        await message.reply("Использование: /unban_user USER_ID")
+        await message.reply("Використання: /unban_user USER_ID")
 
 @admin_only
 async def admin_help(message: types.Message):
     await message.reply(
         "/stats — статистика\n"
-        "/clear_cache — очистить кеш\n"
-        "/users — пользователи\n"
-        "/groups — группы\n"
-        "/set_max_cache SIZE_MB — лимит кеша\n"
-        "/set_max_video SIZE_MB — Лимит видео\n"
+        "/clear_cache — очистити кеш\n"
+        "/users — користувачі\n"
+        "/groups — групи\n"
+        "/set_max_cache SIZE_MB — ліміт кешу\n"
+        "/set_max_video SIZE_MB — Ліміт відео\n"
         "/ban_user USER_ID — БАН\n"
-        "/unban_user USER_ID — разбан\n"
-        "/logs N — N рядков логів\n"
-        "/shutdown — выключить бота\n"
-        "/broadcast TEXT — розсылка"
+        "/unban_user USER_ID — розбан\n"
+        "/logs N — N рядків логів\n"
+        "/shutdown — вимкнути бота\n"
+        "/broadcast TEXT — розсилка"
     )
 
 @admin_only
@@ -266,13 +266,13 @@ async def admin_logs(message: types.Message):
         n = int(message.text.split()[1])
         with open("bot.log", encoding="utf-8") as f:
             lines = f.readlines()[-n:]
-        await message.reply("".join(lines[-20:])[-4000:] or "Логов нет.")
+        await message.reply("".join(lines[-20:])[-4000:] or "Логів немає.")
     except Exception:
-        await message.reply("Использование: /logs N")
+        await message.reply("Використання: /logs N")
 
 @owner_only
 async def admin_shutdown(message: types.Message):
-    await message.reply("Бот выключается...")
+    await message.reply("Бот вимикається...")
     await bot.session.close()
     exit(0)
 
@@ -280,7 +280,7 @@ async def admin_shutdown(message: types.Message):
 async def admin_broadcast(message: types.Message):
     text = message.text.partition(' ')[2].strip()
     if not text:
-        await message.reply("Использование: /broadcast TEXT")
+        await message.reply("Використання: /broadcast TEXT")
         return
     count = 0
     for uid in get_users():
@@ -295,11 +295,11 @@ async def admin_broadcast(message: types.Message):
             count += 1
         except Exception:
             pass
-    await message.reply(f"Разослано {count} пользователям/групам.")
+    await message.reply(f"Розіслано {count} користувачам/групам.")
 
 # --- Модифікації для збору статистики та бану ---
 def link_filter(message: types.Message):
-    # Проверяем наличие любой из ссылок в тексте сообщения
+    # Перевіряємо наявність будь-якої з посилань у тексті повідомлення
     text = message.text or ""
     return (
         re.search(TIKTOK_PATTERN, text)
@@ -314,7 +314,7 @@ def clear_cache_on_start():
         try:
             if os.path.isfile(file_path):
                 os.remove(file_path)
-                logger.info(f"Кеш-файл {file_path} удалено при старте бота.")
+                logger.info(f"Кеш-файл {file_path} видалено при старті бота.")
         except Exception as e:
             logger.warning(f"Не вдалося видалити кеш-файл {file_path}: {e}")
 
@@ -348,7 +348,7 @@ async def handle_video_link(message: types.Message):
         logger.info(f"Group title: {message.chat.title}, group username: {message.chat.username}")
 
     if message.from_user.id in get_banned():
-        await message.reply("Вы заблокированы для использования бота.")
+        await message.reply("Ви заблоковані для використання бота.")
         return
 
     add_user(message.from_user.id)
@@ -358,7 +358,7 @@ async def handle_video_link(message: types.Message):
 
     cache_size = get_cache_size()
     if cache_size > stats.get("max_cache_size", max_cache_size):
-        logger.info("Кеш превышает лимит, очищаю...")
+        logger.info("Кеш перевищує ліміт, очищаю...")
         clear_cache_on_start()
 
     text = message.text or ""
@@ -369,7 +369,7 @@ async def handle_video_link(message: types.Message):
         or re.search(FB_REELS_PATTERN, text)
     )
     if not url:
-        await message.reply("Не удалось найти ссылку.")
+        await message.reply("Не вдалося знайти посилання.")
         return
     video_url = url.group(0)
     cache_path = get_cache_path(video_url)
@@ -380,19 +380,19 @@ async def handle_video_link(message: types.Message):
         try:
             if os.path.exists(path):
                 os.remove(path)
-                logger.info(f"Файл {path} удален автоматично через 10 хвилин.")
+                logger.info(f"Файл {path} видалено автоматично через 10 хвилин.")
         except Exception as e:
-            logger.warning(f"Ошибка при атвоудалении файла: {e}")
+            logger.warning(f"Помилка при атвоудаленні файлу: {e}")
 
     if os.path.exists(cache_path):
-        logger.info(f"Видео найдено в кеше: {cache_path}")
-        progress_msg = await message.reply("Видео найдено в кеше. Отправляю...")
+        logger.info(f"Відео знайдено в кеші: {cache_path}")
+        progress_msg = await message.reply("Відео знайдено в кеші. Відправляю...")
         await asyncio.sleep(1)
         video_file = FSInputFile(cache_path)
         await message.reply_video(video_file)
         video_sent = True
         await bot.delete_message(message.chat.id, progress_msg.message_id)
-        logger.info(f"Видео из кеша отправлено пользователю: {message.from_user.id}")
+        logger.info(f"Відео з кешу відправлено користувачу: {message.from_user.id}")
         asyncio.create_task(schedule_file_removal(cache_path))
         if video_sent:
             try:
@@ -402,7 +402,7 @@ async def handle_video_link(message: types.Message):
         return
 
     progress = {'percent': 0}
-    progress_msg = await message.reply("Скачиваю видео, подождите...")
+    progress_msg = await message.reply("Скачую відео, почекайте...")
 
     def progress_hook(d):
         if d['status'] == 'finished':
@@ -436,14 +436,14 @@ async def handle_video_link(message: types.Message):
             await bot.edit_message_text(
                 chat_id=message.chat.id,
                 message_id=progress_msg.message_id,
-                text="Видео слишком большое для отправки."
+                text="Відео занадто велике для відправки."
             )
             os.remove(video_path)
             return
         await bot.edit_message_text(
             chat_id=message.chat.id,
             message_id=progress_msg.message_id,
-            text="Отправляю.."
+            text="Відправляю.."
         )
         video_file = FSInputFile(video_path)
         await message.reply_video(video_file)
@@ -451,7 +451,7 @@ async def handle_video_link(message: types.Message):
         stats["processed_videos"] = stats.get("processed_videos", 0) + 1
         set_stats(stats)
         await bot.delete_message(message.chat.id, progress_msg.message_id)
-        logger.info(f"Видео отправлено пользователю {message.from_user.id}")
+        logger.info(f"Відео відправлено користувачу {message.from_user.id}")
         asyncio.create_task(schedule_file_removal(video_path))
         if video_sent:
             try:
@@ -459,11 +459,11 @@ async def handle_video_link(message: types.Message):
             except Exception as e:
                 logger.warning(f"Не вдалося видалити повідомлення: {e}")
     except Exception as e:
-        logger.error(f"Ошибка при скачивании: {e}")
+        logger.error(f"Помилка при скачуванні: {e}")
         await bot.edit_message_text(
             chat_id=message.chat.id,
             message_id=progress_msg.message_id,
-            text=f"Ошибка при скачивании: {e}"
+            text=f"Помилка при скачуванні: {e}"
         )
         # Не видаляємо повідомлення користувача, якщо не вдалося скачати відео
 
